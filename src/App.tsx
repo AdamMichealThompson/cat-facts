@@ -1,23 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+
+
+
 import './App.css';
 
+
+import Button from './Button';
+
+
 function App() {
+
+  const [catFact, setCatFact] = useState<string | null>(null);
+
+  const handleRefresh = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+
+      // set loading
+
+      setCatFact("loading cat fact...");
+
+
+      // Fetch a cat fact from the API
+      const response = await fetch('https://catfact.ninja/fact');
+      
+      if (!response.ok) {
+        setCatFact("Failed to fetch cat fact!");
+        throw new Error('Failed to fetch cat fact');
+      }
+
+      const data = await response.json();
+      setCatFact(data.fact);
+
+    } catch (e) {
+      if (e instanceof Error) {
+        setCatFact("Failed to fetch cat fact!\n" + e.message);
+        console.error('Error fetching cat fact:', e.message);
+      }
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+
+      <Button text="Refresh" onClick={handleRefresh} className="refresh-button" />
+      
+      {catFact && <p>{catFact}</p>}
+
       </header>
     </div>
   );
