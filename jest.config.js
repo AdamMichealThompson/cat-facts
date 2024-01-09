@@ -8,5 +8,10 @@ module.exports = {
                 tsconfig: './tsconfig.json'
             }
         ]
-    }
+    },
+
+    moduleNameMapper: {
+        ".(css|less)$": "identity-obj-proxy"
+      },
+
 }

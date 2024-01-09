@@ -1,36 +1,51 @@
+/*
+
+If I'd had more time:
+- A loading spinner to refresh cat facts
+- Better layout for the refresh button (it changes position with the text size)
+
+*/
+
+
+
 import React, { useState } from 'react';
 import './App.css';
 
 import Button from './Button';
 
 
-export const handleRefresh = async (updateFunction: React.Dispatch<React.SetStateAction<string | null>> ) => {
+export const getCatFact = async (): Promise<string> => {
+
   try {
-
-    // set loading
-
-    updateFunction("loading cat fact...");
-
 
     // Fetch a cat fact from the API
     const response = await fetch('https://catfact.ninja/fact');
     
     if (!response.ok) {
-      updateFunction("Failed to fetch cat fact!");
-      throw new Error('Failed to fetch cat fact');
+      return "Failed to fetch cat fact!";
     }
 
     const data = await response.json();
-    updateFunction(data.fact);
+    return data.fact;
 
   } catch (e) {
     if (e instanceof Error) {
-      updateFunction("Failed to fetch cat fact!\n" + e.message);
-      console.error('Error fetching cat fact:', e.message);
+      return "Failed to fetch cat fact! error:\n" + e.message;
     }
+    return "Failed to fetch cat fact! error is not of type Error";
   }
+
 };
 
+const handleRefresh = async (updateFunction: React.Dispatch<React.SetStateAction<string | null>> ) => {
+
+  updateFunction("Loading new cat fact...");
+
+  const fact = await getCatFact();
+
+  updateFunction(fact);
+
+};
 
 function App() {
 
