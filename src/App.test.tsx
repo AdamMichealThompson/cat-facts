@@ -17,9 +17,7 @@ describe('handleRefresh Function', () => {
     await act(async () => {
         const fact = await getCatFact();
         //| if we don't have an error here the test should fail
-        if (!fact.includes("Failed to fetch cat")) {
-          console.error("Fetched cat fact successfully during failure test");
-        }
+        expect(fact).toContain("Failed to fetch cat");
     });
 
     // Restore the original fetch function
@@ -33,11 +31,8 @@ describe('handleRefresh Function', () => {
 
     await act(async () => {
       const fact = await getCatFact();
-
       //| if we don't have an error here the test should fail
-      if (!fact.includes("Network error")) {
-        console.error("Failed test : expected network error");
-      }
+      expect(fact).toContain("Network error");
     });
 
     // Restore the original fetch function
